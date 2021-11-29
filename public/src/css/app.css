@@ -64,7 +64,6 @@ button {
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  cursor: pointer;
   touch-action: manipulation;
   user-select: none;
   background-image: none;
@@ -72,6 +71,10 @@ button {
   padding: 0;
   margin: 0;
   outline: none;
+}
+
+button, a {
+  cursor: pointer;
 }
 
 input:focus-visible {
@@ -124,6 +127,11 @@ input::-webkit-inner-spin-button {
 @media (min-width: 700px) {
   :root {
     font-size: 62.5%;
+  }
+
+  main > section > article {
+    max-width: 25%;
+    min-width: 320px;
   }
 }
 #root > header {
@@ -305,6 +313,11 @@ input::-webkit-inner-spin-button {
   background-color: #e1b865;
 }
 
+@media (min-width: 700px) {
+  #root > footer input {
+    width: calc(100% - 12rem);
+  }
+}
 #overlay {
   position: fixed;
   display: grid;
@@ -332,6 +345,7 @@ input::-webkit-inner-spin-button {
   flex-flow: column;
   row-gap: 1.6rem;
   border-radius: 10px 10px 0 0;
+  max-width: 760px;
 }
 #modal-edit header {
   display: flex;
@@ -362,6 +376,15 @@ input::-webkit-inner-spin-button {
   position: relative;
   transition: background-color 150ms ease;
 }
+#modal-edit form > section svg {
+  display: none;
+  position: absolute;
+  width: 2.4rem;
+  height: 2.4rem;
+  right: 1rem;
+  bottom: 2rem;
+  color: #26323861;
+}
 #modal-edit form > section:focus-within {
   background-color: #e1b865;
 }
@@ -373,6 +396,12 @@ input::-webkit-inner-spin-button {
   color: #9B51E0;
   margin-left: 1.333rem;
   transition: font-weight 150ms ease;
+}
+#modal-edit form > section.invalid label {
+  color: #26323861;
+}
+#modal-edit form > section.invalid svg {
+  display: block;
 }
 #modal-edit form > section input {
   width: 100%;

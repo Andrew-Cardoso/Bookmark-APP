@@ -35,12 +35,18 @@ const getExpDiff = ( book, originalBook ) => {
   return diff + book.totalPages;
 };
 
+const removeExperience = ( { currentPage, totalPages }, exp ) => {
+  const expDiff = currentPage === totalPages ? totalPages * 2 : currentPage;
+  exp.current -= expDiff;
+  decreaseXp( exp );
+};
+
 const updateExperience = ( book, exp, originalBook ) => {
   const expDiff = originalBook
     ? getExpDiff( book, originalBook )
     : book.currentPage === book.totalPages
       ? book.currentPage * 2
-      : book.currentPage;  
+      : book.currentPage;
 
   exp.current += expDiff;
   expDiff > 0 ? increaseXp( exp ) : decreaseXp( exp );
@@ -75,6 +81,12 @@ const ExperienceStore = {
   async onBookUpserted ( book, originalBook ) {
     const experience = parseProxy( this.experience );
     updateExperience( book, experience, originalBook );
+    await put( 'experience', experience );
+    this.experience = experience;
+  },
+  async onBookDeleted ( book ) {
+    const experience = parseProxy( this.experience );
+    removeExperience( book, experience );
     await put( 'experience', experience );
     this.experience = experience;
   },

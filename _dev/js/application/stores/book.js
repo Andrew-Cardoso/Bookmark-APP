@@ -17,7 +17,8 @@ const BookStore = {
   async upsert ( proxyBook ) {
     const book = parseProxy( proxyBook );
 
-    if ( isEmpty( book.title ) ) return Promise.reject( 'sem titulo' ); //mostrar mensagem em toast
+    if ( isEmpty( book.title ) )
+      return Promise.reject();
 
     const upsert = book.id ? put : add;
     const id = await upsert( 'books', book );
@@ -25,9 +26,11 @@ const BookStore = {
     this.updateList( id, updatedbook );
     return updatedbook;
   },
-  async remove ( { id } ) {
-    await removeBook( id );
-    this.updateList( id );
+  async remove ( proxyBook ) {
+    const book = parseProxy( proxyBook );
+    await removeBook( book.id );
+    this.updateList( book.id );
+    return book;
   },
   toggleSearch ( toggle ) {
     if ( typeof toggle !== 'undefined' ) return ( this.searchString = toggle ? '' : false );

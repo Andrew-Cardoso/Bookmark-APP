@@ -161,17 +161,21 @@
         ></a>
         <a role="button" @click="$store.modalEdit.toggle()">Cadastro de livro</a>
       </div>
-
-      <!-- <div id="toast-cot" x-data="$store.toast" x-cloak x-transition x-show="toasts.length" x-init="$watch('open', () => message && setCloseTimeout())">
-        <h1 x-text="message"></h1>
-      </div> -->
     </div>
 
     <div id="overlay" x-data x-cloak x-show="$store.modalEdit.open || $store.modalDelete.book" x-transition>
       <div id="modal-delete" x-data="$store.modalDelete" x-show="book" x-transition>
         <h1>Tem certeza que deseja excluir <strong x-text="book?.title"></strong>?</h1>
         <section>
-          <button @click="$store.book.remove(book).then(() => toggle())">Sim</button>
+          <button
+            @click="$store.book.remove(book).then(bookDeleted => {
+            $store.experience.onBookDeleted(bookDeleted)
+            $store.info.onBookDeleted(bookDeleted)
+            toggle()
+          })"
+          >
+            Sim
+          </button>
           <button @click="toggle()">Não</button>
         </section>
       </div>
@@ -179,7 +183,13 @@
       <div id="modal-edit" x-data="$store.modalEdit" x-transition x-show="open" x-init="$watch('open', () => open && adjustModalHeight())">
         <header>
           <button class="burger open" @click="toggle()"><span></span></button>
-          <button>
+          <button
+            @click="() => {
+              toggle()
+              $store.book.toggleSearch(true)
+              $store.nav.page === 'rewards' && ($store.nav.page = 'books') 
+            }"
+          >
             <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
               <path
                 d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
@@ -188,20 +198,23 @@
           </button>
         </header>
         <form>
-          <section>
+          <section :class="(error && (!book.title || /^\s*$/.test( book.title )))&& 'invalid'">
             <input type="text" name="title" id="title" autocomplete="off" x-model="book.title" />
             <label for="title">Livro</label>
+            <svg viewBox="0 0 24 24">
+              <path fill="currentColor" d="M 11,4L 13,4L 13,15L 11,15L 11,4 Z M 13,18L 13,20L 11,20L 11,18L 13,18 Z" />
+            </svg>
           </section>
           <section>
-            <input type="text" name="totalPages" id="totalPages" autocomplete="off" x-model="book.totalPages" />
+            <input type="number" name="totalPages" id="totalPages" autocomplete="off" x-model="book.totalPages" />
             <label for="totalPages">Total de páginas</label>
           </section>
           <section>
-            <input type="text" name="currentPage" id="currentPage" autocomplete="off" x-model="book.currentPage" />
+            <input type="number" name="currentPage" id="currentPage" autocomplete="off" x-model="book.currentPage" />
             <label for="currentPage">Páginas atual</label>
           </section>
           <section>
-            <input name="tag" id="tag" autocomplete="off" @keyup.enter="addTag($el)" @keyup.space="addTag($el)" />
+            <input name="tag" id="tag" autocomplete="off" @keyup.enter="addTag($el)" />
             <label for="tag">Tags</label>
           </section>
         </form>
@@ -222,14 +235,17 @@
         </article>
         <button
           type="button"
-          @click="async () => {
+          @click="() => {
           const originalBook = $store.book.books.find(x => x.id === book?.id)
-          const updatedBook = await $store.book.upsert(book)
-          Promise.allSettled([
-            $store.experience.onBookUpserted(updatedBook, originalBook),
-            $store.info.onBookUpserted(updatedBook, originalBook),
-          ])
-          toggle()
+          $store.book.upsert(book)
+          .then(updatedBook => {
+            Promise.allSettled([
+              $store.experience.onBookUpserted(updatedBook, originalBook),
+              $store.info.onBookUpserted(updatedBook, originalBook),
+            ])
+            toggle()
+          })
+          .catch(() => (error = true))
         }"
         >
           <svg width="25" height="25" fill="currentColor" viewBox="0 0 16 16">

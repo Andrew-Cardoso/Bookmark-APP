@@ -1,4 +1,4 @@
-import { isEmpty, normalizeString, removeSpaces } from '../utils/functions';
+import { isEmpty, normalizeString } from '../utils/functions';
 
 const adjustHeight = (ms) =>
   setTimeout(() => {
@@ -27,9 +27,11 @@ const newBook = (book) => ({
 const ModalEditStore = {
   open: false,
   book: newBook(),
+  error: false,
   toggle(book) {
     this.open = !this.open;
-    this.book = newBook(book);
+    this.error = false;
+    this.book = newBook( book );
   },
   addTag(input) {
     const { value } = input;

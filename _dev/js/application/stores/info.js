@@ -33,6 +33,7 @@ const updateNextReward = ( key, value, level ) => {
 };
 
 const addNewRewards = info => {
+
   const rewards = [];
 
   if ( info.pagesRead >= NextRewards.pageRead.value ) {
@@ -76,24 +77,27 @@ const reverseNextReward = key => {
 };
 
 const removeRewards = info => {
-  const indexes = [];
+  const tupleRewardKey = [];
 
   if ( info.pagesRead < NextRewards.pageRead.value / 10 ) {
-    indexes.push( info.rewards.findIndex( ( { title, level } ) => title === 'leitor' && level === NextRewards.pageRead.level - 1 ) );
-    reverseNextReward( 'pageRead' );
+    const reward = info.rewards.find( ( { title, level } ) => title === 'leitor' && level === NextRewards.pageRead.level - 1 );
+    reward && tupleRewardKey.push( [ reward, 'pageRead' ] );
   }
   if ( info.booksRead < Math.floor( NextRewards.bookRead.value / 10 ) ) {
-    indexes.push( info.rewards.find( ( { title, level } ) => title === 'finalizado' && level === NextRewards.bookRead.level - 1 ) );
-    reverseNextReward( 'bookRead' );
+    const reward = info.rewards.find( ( { title, level } ) => title === 'finalizado' && level === NextRewards.bookRead.level - 1 );
+    reward && tupleRewardKey.push( [ reward, 'bookRead' ] );
   }
   if ( info.booksAdded < NextRewards.bookAdded.value / 10 ) {
-    indexes.push( info.rewards.find( ( { title, level } ) => title === 'colecionador' && level === NextRewards.bookAdded.level - 1 ) );
-    reverseNextReward( 'bookAdded' );
+    const reward = info.rewards.find( ( { title, level } ) => title === 'colecionador' && level === NextRewards.bookAdded.level - 1 );
+    reward && tupleRewardKey.push( [ reward, 'bookAdded' ] );
   }
 
-  if ( indexes.length === 0 ) return;
+  if ( tupleRewardKey.length === 0 ) return;
 
-  indexes.forEach( i => i !== -1 && info.rewards.splice( i, 1 ) );
+  for ( const [ reward, key ] of tupleRewardKey ) {
+    info.rewards.splice( info.rewards.indexOf( reward ), 1 );
+    reverseNextReward( key );
+  }
 
   removeRewards( info );
 };
@@ -104,6 +108,13 @@ const addInfo = ( { currentPage, totalPages }, info ) => {
   currentPage === totalPages && ( info.booksRead++ );
   info.pagesRead += currentPage;
   addNewRewards( info );
+};
+
+const removeInfo = ( book, info ) => {
+  info.booksAdded--;
+  info.pagesRead -= book.currentPage;
+  book.currentPage === book.totalPages && ( info.booksRead-- );
+  removeRewards( info );
 };
 
 const updateInfo = ( book, originalBook, info ) => {
@@ -133,11 +144,17 @@ const InfoStore = {
     if ( this.initCalled ) return;
     this.initCalled = true;
     const [ info ] = await find( 'info' );
-    info ? ( this.info = info ) : add( 'info', { ...this.info, rewards: [ ...this.info.rewards ] } );
+    info ? ( this.info = info ) : add( 'info', parseProxy( this.info ) );
   },
   async onBookUpserted ( book, originalBook ) {
     const info = parseProxy( this.info );
     originalBook ? updateInfo( book, originalBook, info ) : addInfo( book, info );
+    await put( 'info', info );
+    this.info = info;
+  },
+  async onBookDeleted ( book ) {
+    const info = parseProxy( this.info );
+    removeInfo( book, info );
     await put( 'info', info );
     this.info = info;
   },
