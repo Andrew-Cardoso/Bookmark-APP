@@ -1,0 +1,117 @@
+@use '../utils/variables' as variables
+
+:root
+	font-size: 60%
+*
+	margin: 0
+	padding: 0
+	box-sizing: border-box
+
+html, body, #root
+	height: 100vh
+	width: 100vw
+
+body
+	background: variables.$background-white
+
+body, input, button, textarea
+	color: variables.$color-primary
+	font: 500 1.6rem variables.$font-primary
+
+#root
+	display: flex
+	align-items: flex-start
+	justify-content: center
+	flex-direction: column
+
+main
+	width: 100%
+	/*alturas:	tela  -	header   -	footer  - margin*/
+	height: calc( 100vh - (7rem + 12px) - 4.167rem - .625rem )
+	margin-bottom: .625rem
+
+	> section
+		width: 100%
+		height: 100%
+		overflow: hidden auto
+		display: flex
+		flex-wrap: wrap
+		gap: 16px
+		margin: 0 auto
+		align-content: flex-start
+
+		> article
+			flex: 1 1 100%
+			box-shadow: variables.$default-shadow
+			border-radius: 10px
+			height: fit-content
+			margin: 0 8px
+			gap: 8px 4px
+
+			&:first-child
+				margin-top: 8px
+			&:last-child
+				margin-bottom: 8px
+
+button
+	text-align: center
+	white-space: nowrap
+	vertical-align: middle
+	cursor: pointer
+	touch-action: manipulation
+	user-select: none
+	background-image: none
+	border: none
+	padding: 0
+	margin: 0
+	outline: none
+
+input:focus-visible
+	outline: #0000 !important
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+	-webkit-appearance: none
+	margin: 0
+
+.burger
+	display: grid
+	align-items: center
+	justify-content: center
+	transition: all .5s ease-in-out
+
+	> span
+		width: 1.562rem
+		height: .208rem
+		background: variables.$color-primary
+		transition: all .5s ease-in-out
+
+		&::before,
+		&::after
+			content: ''
+			position: absolute
+			width: 1.562rem
+			height: .208rem
+			background: variables.$color-primary
+			transition: all .25s ease-in-out
+
+		&::before
+			transform: translateY(-.417rem) translateX(-.729rem)
+
+		&::after
+			transform: translateY(.417rem) translateX(-.729rem)
+
+	&.open
+		> span
+			&::before
+				transform: translateY(0) translateX(-.729rem)
+
+			&::after
+				transform: translateY(0) translateX(-.729rem)
+
+[x-cloak]
+	display: none !important
+
+@media (min-width: 700px)
+	:root
+		font-size: 62.5%

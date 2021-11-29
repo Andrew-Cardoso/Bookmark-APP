@@ -1,0 +1,43 @@
+@use '../utils/variables' as variables
+	
+#root > header
+	height: calc( 7rem + 12px )
+	color: variables.$main-blue
+	width: 100%
+	padding: 8px 20px 4px 20px
+	display: grid
+	align-items: center
+	grid-template-columns: 1fr
+	grid-template-rows: 2.5rem 2.5rem 2rem
+
+	section
+		height: 1.042rem
+		background: variables.$background-yellow
+		border-radius: 10px
+		align-self: center
+		box-shadow: variables.$default-shadow
+
+		div
+			width: 0
+			height: 100%
+			border-radius: 10px
+			background: linear-gradient(-45deg, variables.$main-blue, variables.$main-blue-darker, variables.$main-blue-lighter, variables.$main-blue, variables.$main-blue-darker, variables.$main-blue-lighter)
+			background-size: 400% 400%
+			transition: width 400ms ease-in, filter 300ms ease
+			animation: fluid-bar 10s ease alternate-reverse infinite
+
+	h1
+		font-size: 1.875rem
+		font-family: variables.$font-secondary
+		align-self: center
+		justify-self: center
+	h2
+		font-size: 1.4rem
+		align-self: start
+		justify-self: center
+
+@keyframes fluid-bar
+	0%
+		background-position: 0% 50%
+	100%
+		background-position: 100% 50%

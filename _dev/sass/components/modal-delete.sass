@@ -1,0 +1,41 @@
+@use '../utils/variables' as variables
+
+#modal-delete
+	box-shadow: variables.$default-shadow
+	display: grid
+	grid-template-rows: 1fr auto
+	background: variables.$main-blue
+	border-radius: 10px
+	padding: 3.2rem
+	margin: 3.2rem
+	row-gap: 3.2rem
+	max-width: calc(100% - 3.2rem)
+
+	h1
+		font-size: 2.5rem
+		font-weight: 600
+
+	section
+		display: flex
+		flex-direction: row
+		column-gap: 10px
+
+		button
+			border: thin solid variables.$background-yellow
+			border-radius: 12px
+			flex: 1
+			font-size: 2.5rem
+			font-weight: 600
+			padding: .25rem 0
+
+			&:first-child
+				background: transparent
+				color: variables.$background-white
+
+			&:last-child
+				background: variables.$background-yellow
+				color: variables.$background-white
+
+@media (min-width: 700px)
+	#modal-delete
+		max-width: 43.2rem

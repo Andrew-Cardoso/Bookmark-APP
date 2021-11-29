@@ -1,0 +1,57 @@
+@use '../utils/variables' as variables
+
+#root > footer
+	background: variables.$background-yellow
+	width: 100%
+	height: 4.167rem
+	display: flex
+	justify-content: space-between
+	border-radius: 10px 10px 0 0
+	box-shadow: variables.$default-shadow
+	z-index: 2
+
+	> button
+		width: 4.167rem
+		background: transparent
+
+		&:first-child
+			border-top-left-radius: 10px
+
+		&:last-child
+			border-top-right-radius: 10px
+			display: grid
+			place-items: center
+
+	section
+		width: 100%
+		height: 100%
+		display: grid
+		place-items: center
+
+		button
+			background: variables.$main-blue
+			border-radius: 50%
+			height: 5.833rem
+			width: 5.833rem
+			transform: translateY(-(calc(5.833rem / 2)))
+			border: .625rem solid variables.$background-white
+			display: flex
+			align-items: center
+			justify-content: center
+
+	input
+		height: calc( 100% - 1rem )
+		align-self: center
+		background-color: variables.$input-bg
+		border: none
+		outline-color: #0000
+		color: variables.$color-secondary
+		padding-left: 1rem
+		padding-right: 1rem
+		border-bottom: thin solid variables.$input-border-bottom-color
+		transition: background-color 150ms ease, border-bottom-color 150ms ease
+		width: fit-content
+
+		&:focus
+			border-bottom-color: variables.$main-blue
+			background-color: variables.$input-bg-focus

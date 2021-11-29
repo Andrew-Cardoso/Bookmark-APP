@@ -1,0 +1,27 @@
+@use '../utils/variables'
+
+#menu
+	position: absolute
+	bottom: 0
+	z-index: 1
+	height: calc(4.167rem + 12rem)
+	width: fit-content
+	display: flex
+	flex-flow: column
+	align-items: start
+	justify-content: start
+	background: variables.$background-white
+	box-shadow: variables.$default-shadow
+	border-radius: 10px 10px 0 0
+
+	a
+		padding: 0 12px
+		font-size: 14px
+		color: variables.$color-secondary
+		height: 4rem
+		display: flex
+		align-items: center
+		justify-content: start
+
+		&:first-child
+			border-radius: 10px 10px 0 0

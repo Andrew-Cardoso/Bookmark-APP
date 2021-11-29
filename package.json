@@ -1,0 +1,24 @@
+{
+  "name": "bookmark-pwa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "webpack",
+    "watch:sass": "sass --watch _dev/sass/app.sass public/src/css/app.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "alpinejs": "^3.5.2",
+    "dexie": "^3.2.0"
+  },
+  "devDependencies": {
+    "sass": "^1.43.4",
+    "webpack": "^5.64.2",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.5.0"
+  }
+}
